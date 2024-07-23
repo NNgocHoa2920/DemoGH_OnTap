@@ -66,12 +66,12 @@ namespace DemoGH_OnTap.Controllers
 
         //hiển thị tất cả danh sách account
         public IActionResult Index(string name)
-        {
+        { 
             //lấy giá trị session có tên account
-            var sessionData = HttpContext.Session.GetString("Account");
+            var sessionData = HttpContext.Session.GetString("username");
             if(sessionData == null)
             {
-                ViewData["message"] = "Bạn chwaa đăng nhập hoặc phiên đăng nhập hết hạn";
+                ViewData["message"] = "Bạn chưa đăng nhập hoặc phiên đăng nhập hết hạn";
             }
             else
             {
@@ -95,7 +95,7 @@ namespace DemoGH_OnTap.Controllers
                 //check tìm kiesm nếu k có
                 if (searchData.Count == 0)
                 {
-                    return View(accountData);
+                    return View(searchData);
                 }
                 else
                     return View(searchData);
