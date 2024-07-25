@@ -4,6 +4,7 @@ using DemoGH_OnTap.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoGH_OnTap.Migrations
 {
     [DbContext(typeof(SD18406CartDbContext))]
-    partial class SD18406CartDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240725172616_hi5555")]
+    partial class hi5555
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,10 +70,10 @@ namespace DemoGH_OnTap.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("GioHangId")
+                    b.Property<Guid>("GioHangId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("SanPhamId")
+                    b.Property<Guid>("SanPhamId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -132,11 +134,15 @@ namespace DemoGH_OnTap.Migrations
                 {
                     b.HasOne("DemoGH_OnTap.Models.GioHang", "GioHang")
                         .WithMany("GHCTs")
-                        .HasForeignKey("GioHangId");
+                        .HasForeignKey("GioHangId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DemoGH_OnTap.Models.SanPham", "SanPham")
                         .WithMany("GHCTs")
-                        .HasForeignKey("SanPhamId");
+                        .HasForeignKey("SanPhamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GioHang");
 

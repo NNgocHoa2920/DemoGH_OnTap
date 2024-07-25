@@ -12,9 +12,9 @@ namespace DemoGH_OnTap.Configurations
 
             //csu hình mqh 1-n giữa sanpham và ghct
             builder.HasOne(x => x.SanPham).WithMany(x => x.GHCTs)
-                .HasForeignKey(x => x.SanPham);
+                .HasForeignKey(x => x.SanPhamId);
             builder.HasOne(x => x.GioHang).WithMany(x => x.GHCTs)
-              .HasForeignKey(x => x.GioHang);
+              .HasForeignKey(x => x.GioHangId);
         }
     }
 }

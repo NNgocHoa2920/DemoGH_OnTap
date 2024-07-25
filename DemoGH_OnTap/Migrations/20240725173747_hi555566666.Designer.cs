@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoGH_OnTap.Migrations
 {
     [DbContext(typeof(SD18406CartDbContext))]
-    [Migration("20240720082358_hehe")]
-    partial class hehe
+    [Migration("20240725173747_hi555566666")]
+    partial class hi555566666
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,6 +66,9 @@ namespace DemoGH_OnTap.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("GioHangId")
                         .HasColumnType("uniqueidentifier");
