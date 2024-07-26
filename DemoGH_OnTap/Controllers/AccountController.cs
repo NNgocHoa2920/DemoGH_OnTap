@@ -67,7 +67,7 @@ namespace DemoGH_OnTap.Controllers
             else // trong trường hợp thành công sẽ trả về trang chủ
             {
                 HttpContext.Session.SetString("username", userName); // Lưu dữ liệu login vào Session
-                HttpContext.Session.SetString("userID", acc.Id.ToString());
+                HttpContext.Session.SetString("userID", acc.Id.ToString());  // lưu id
                 return RedirectToAction("Index", "Home");
             }
 

@@ -12,7 +12,7 @@ namespace DemoGH_OnTap.Controllers
         }
         public IActionResult Index()
         {
-            var user = HttpContext.Session.GetString("user");
+            var user = HttpContext.Session.GetString("username");
             // Đầu tiên Check xem trong Session có dữ liệu đăng nhập chưa?
             if (user == null)
             {
@@ -22,8 +22,9 @@ namespace DemoGH_OnTap.Controllers
             }
             else
             {
-                var getUser = _db.Accounts.FirstOrDefault(p => p.Name == user);
-                var GHCTdata = _db.GHCTs.Where(p => p.GioHangId == getUser.Id).ToList();
+                var getUser = _db.Accounts.FirstOrDefault(p => p.UserName == user);
+                var gioHang = _db.GioHang.FirstOrDefault(x => x.AccountID == getUser.Id);
+                var GHCTdata = _db.GHCTs.Where(p => p.GioHangId == gioHang.Id).ToList();
                 return View(GHCTdata);
             }
           
