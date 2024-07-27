@@ -1,5 +1,6 @@
 ﻿using DemoGH_OnTap.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography.Xml;
 
 namespace DemoGH_OnTap.Controllers
 {
@@ -10,25 +11,24 @@ namespace DemoGH_OnTap.Controllers
         {
             _db = db;
         }
+      
         public IActionResult Index()
         {
             var user = HttpContext.Session.GetString("username");
-            // Đầu tiên Check xem trong Session có dữ liệu đăng nhập chưa?
+
+            //đầu tiên check xem trong session có dư liệu đăng nhập hay chưa
             if (user == null)
             {
-                //var dataSession = HttpContext.Session.GetString("ghSession");
-                //var ghcts = JsonConvert.DeserializeObject<List<GHCT>>(dataSession);
-                return Content("Chưa đăng nhập không có giỏ đâu");
+                return Content("Đăng nhập đê bạn ek");
             }
             else
             {
-                var getUser = _db.Accounts.FirstOrDefault(p => p.UserName == user);
-                var gioHang = _db.GioHang.FirstOrDefault(x => x.AccountID == getUser.Id);
-                var GHCTdata = _db.GHCTs.Where(p => p.GioHangId == gioHang.Id).ToList();
+                var getUser = _db.Accounts.FirstOrDefault(x => x.UserName == user);
+                var giohang = _db.GioHang.FirstOrDefault(x => x.AccountID == getUser.Id);
+                var GHCTdata = _db.GHCTs.Where(x => x.GioHangId == giohang.Id).ToList();
+
                 return View(GHCTdata);
             }
-          
-            
         }
     }
 }

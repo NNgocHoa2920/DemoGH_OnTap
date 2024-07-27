@@ -43,107 +43,101 @@ namespace DemoGH_OnTap.Controllers
 
 
         }
-        //public IActionResult AddToCart(Guid id, int amount)
+
+        ////CÁCH 1: THÊM VÀO GIỎ HÀNG
+        //public IActionResult AddToCart(Guid id, int amount) // id này là id của sp khi add
         //{
-        //    var sessionData = HttpContext.Session.GetString("username");
-
-        //    if (sessionData == null)
+        //    //lây ra username tương ứng với giỏ hàng đó
+        //    var user = HttpContext.Session.GetString("username");
+        //    if(user == null)
         //    {
-        //        return Content("Chưa đăng nhập không có giỏ đâu");
+        //        return Content("Chưa đăng nhập hoặc phiên đăng nhập hét hạn");
+        //    } 
+        //    //lấy thông của user của người dùng/ getUser là 1 đối tượng người
+        //    var getUser = _db.Accounts.FirstOrDefault(x=>x.UserName == user);
+        //    //lấy giỏ hàng tương ứng với người dùng
+        //    var giohang = _db.GioHang.FirstOrDefault(x=>x.AccountID == getUser.Id);
+        //    if(giohang == null)
+        //    {
+        //        return Content("giỏ hàng không tồn tại");
         //    }
-
-        //    var getUser = _db.Accounts.FirstOrDefault(p => p.UserName == sessionData);
-        //    if (getUser == null)
+        //    //bắt đầu thêm
+        //    var ghct = new GHCT
         //    {
-        //        return Content("Người dùng không tồn tại");
-        //    }
-
-        //    Kiểm tra xem giỏ hàng của người dùng có tồn tại không
-        //    var gioHang = _db.GioHang.Find(getUser.Id);
-        //    var gioHang = _db.GioHang.FirstOrDefault(x => x.AccountID == getUser.Id);
-        //    đoạn này ko dùng find được, vì m tìm trong GioHang thì ID của nó là của GIỎ HÀNG,
-        //    cái find là tìm ID trùng với ID truyền vào, thì truyền ID user vào để tìm trong giỏ hàng làm sao được,
-        //     cái này phải đổi thành FirstOrDefault tìm ra giỏ hàng nào có account ID giống với user id
-
-        //    if (gioHang == null)
-        //    {
-        //        return Content("Giỏ hàng của người dùng không tồn tại");
-        //    }
-
-        //    var ghctSP = new GHCT
-        //    {
-        //        Id = Guid.NewGuid(),
+        //        //Id = Guid.NewGuid(), //bỏ đi vì khi tạo mới nó tự lấy id lắp vào
         //        Amount = amount,
-        //        GioHangId = gioHang.Id,
+        //        GioHangId = giohang.Id,
         //        SanPhamId = id
+
         //    };
+        //    _db.GHCTs.Add(ghct);
+        //    _db.SaveChanges();
+        //    return RedirectToAction("Index");
 
-        //    try
-        //    {
-        //        _db.GHCTs.Add(ghctSP);
-        //        _db.SaveChanges();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Content($"Lỗi khi thêm sản phẩm vào giỏ hàng: {ex.Message}");
-        //    }
-
-        //    return RedirectToAction("Index", "GHCT");
         //}
 
-
-        public IActionResult AddToCart(Guid id, int amount) // id này là id của sản phẩm
+        //CÁCH 2: Cộng dồn san phảm trong giỏ hàng
+        //CÁCH 1: THÊM VÀO GIỎ HÀNG
+        public IActionResult AddToCart(Guid id, int amount) // id này là id của sp khi add
         {
-            // Thực hiện việc kiểm tra xem đã đunk nhặp chưa
-            //var logindata = HttpContext.Session.GetString("username");
-            var logindata = HttpContext.Session.GetString("userID"); // nếu lưu id thì dùng cái lày
-
-            if (logindata == null) return Content("Đã đặng nhập đâu mà đòi thêm thắt cái gì?");
-            else
+            //lây ra username tương ứng với giỏ hàng đó
+            var user = HttpContext.Session.GetString("username");
+            if (user == null)
             {
-                //var getUser = _db.Accounts.FirstOrDefault(p => p.UserName == logindata);
-                //var gioHang = _db.GioHang.FirstOrDefault(x => x.AccountID == getUser.Id);
-                // Lấy ra tất cả sản phẩm trong giỏ hàng của khách hàng vừa đăng nhập
-
-                //var userCart = _db.GHCTs.Where(p => p.GioHangId == gioHang.Id).ToList();
-                // lấy ra giỏ hàng của người dùng
-                var gioHang = _db.GioHang.FirstOrDefault(x => x.AccountID == Guid.Parse(logindata));
-                if (gioHang == null)
-                {
-                    return Content("Khong tim thay gio hang");
-                }
-                var userCart = _db.GHCTs.Where(p => p.GioHangId == gioHang.Id).ToList();
-                bool checkSelected = false;
-                Guid idGHCT = Guid.Empty;
-                foreach (var item in userCart)
-                {
-                    if (item.SanPhamId == id)
-                    {
-                        //nếu id sp trong giỏ hàng của user đã trùng vs cái đc chọn
-                        checkSelected = true;
-                        idGHCT = item.Id; //Lấy ra cái ID của GHCT để tẹo nữa ta update
-                        break;
-                    }
-                }
-                if (!checkSelected) // Nếu sản phẩm chưa từng được chọn
-                {
-                    // tạo ra 1 GHCT ứng với Sản phẩm đó
-                    GHCT ghct = new GHCT() {  SanPhamId = id, GioHangId = gioHang.Id };
-                    _db.GHCTs.Add(ghct);
-                    _db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                else // Nếu SP đã được chọn
-                {
-                    var ghctUpdate = _db.GHCTs.FirstOrDefault(x => x.GioHangId == gioHang.Id); // tìm theo giỏ hàng tìm được ở trên
-                    ghctUpdate.Amount = ghctUpdate.Amount + amount;
-                    _db.GHCTs.Update(ghctUpdate);
-                    _db.SaveChanges(); // Lưu lại
-                    return RedirectToAction("Index");
-                }
+                return Content("Chưa đăng nhập hoặc phiên đăng nhập hét hạn");
             }
+            //lấy thông của user của người dùng/ getUser là 1 đối tượng người
+            var getUser = _db.Accounts.FirstOrDefault(x => x.UserName == user);
+            //lấy giỏ hàng tương ứng với người dùng
+            var giohang = _db.GioHang.FirstOrDefault(x => x.AccountID == getUser.Id);
+            if (giohang == null)
+            {
+                return Content("giỏ hàng không tồn tại");
+            }
+            
+            //lấy ra toàn bộ GHCT của user
+            var userCart = _db.GHCTs.Where(x=>x.GioHangId == giohang.Id).ToList();
+            bool check = false;
+            Guid idGHCT = Guid.Empty;
+            //duyệt ghct
+            foreach(var item in  userCart)
+            {
+                if( item.SanPhamId == id)
+                {
+                    //nếu id sp trong giỏ hàng của user trùng với cái được chọn
+                    check = true;
+                    idGHCT = item.Id; //lấy ra id của GHCT để tí nữa update
+                    break;
+                      
+                }    
+            } 
+            if(!check) // nếu sp của mình chưa từng đc chọn
+            {
+                //tạo ra 1 GHCT ứng với srn phẩm đó
+                GHCT ghct = new GHCT()
+                {
+                    SanPhamId = id,
+                    GioHangId = giohang.Id,
+                    Amount = amount,
+
+                };
+                _db.GHCTs.Add(ghct);
+                _db.SaveChanges();
+                return RedirectToAction("index");
+
+            }
+            else // sp được dc chọn dồi
+            {
+                var ghctUpdate = _db.GHCTs.FirstOrDefault(x => x.Id == idGHCT); // tìm theo ghct
+                ghctUpdate.Amount = ghctUpdate.Amount + amount;
+                _db.GHCTs.Update(ghctUpdate);
+                _db.SaveChanges();
+                return RedirectToAction("index");
+            }
+            
 
         }
+
     }
 }
 

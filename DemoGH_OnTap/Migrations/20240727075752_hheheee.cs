@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DemoGH_OnTap.Migrations
 {
-    public partial class hi : Migration
+    public partial class hheheee : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -63,8 +63,9 @@ namespace DemoGH_OnTap.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SanPhamId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GioHangId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SanPhamId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GioHangId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Amount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,14 +74,12 @@ namespace DemoGH_OnTap.Migrations
                         name: "FK_GHCTs_GioHang_GioHangId",
                         column: x => x.GioHangId,
                         principalTable: "GioHang",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_GHCTs_SanPhams_SanPhamId",
                         column: x => x.SanPhamId,
                         principalTable: "SanPhams",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

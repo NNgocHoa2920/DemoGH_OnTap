@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoGH_OnTap.Migrations
 {
     [DbContext(typeof(SD18406CartDbContext))]
-    [Migration("20240725173747_hi555566666")]
-    partial class hi555566666
+    [Migration("20240727075752_hheheee")]
+    partial class hheheee
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
